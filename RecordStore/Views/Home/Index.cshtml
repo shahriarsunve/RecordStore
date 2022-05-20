@@ -1,0 +1,110 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center" >
+    <h1 class="display-4">Welcome</h1>
+    <h2>Please, Click To Insert Record</h2>
+    <button id="btn" class="btn btn-info">Open Insert Tab</button>
+
+
+    <div id="submitDiv">
+        <form>
+            <div>
+
+                <br />
+                <div class=" col-12" style="text-align:left">
+                    <lable class="col-4">
+                        category
+                    </lable>
+                    <input class="col-8" id="category" placeholder="category" name="category" />
+                </div>
+                <br />
+                <div class=" col-12" style="text-align:left">
+                    <lable class="col-4">
+                        keyname
+                    </lable>
+                    <input class="col-8" id="keyname" placeholder="keyname" name="keyname" />
+                </div>
+                <br />
+                <div class=" col-12" style="text-align:left">
+                    <lable class="col-4">
+                        value
+                    </lable>
+                    <input class="col-8" id="value" placeholder="value" name="value" />
+                </div>
+                <br />
+                <div class=" col-12" style="text-align:left">
+                    <lable class="col-4">
+                        status
+                    </lable>
+                    <input class="col-8" id="status" placeholder="status" name="status" />
+                </div>
+            </div>
+            <br />
+            <br />
+            <button class="btn btn-success" id="saveData" type="button">Submit</button>
+        </form>
+    </div>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+
+    $(document).ready(function () {
+        $('#submitDiv').hide();
+    })
+
+
+    $('#btn').click(function () {
+        $('#submitDiv').toggle();
+    })
+
+
+
+    $('#saveData').click(function () {
+
+        let category = $('#category').val();
+        let keyname = $('#keyname').val();
+        let value = $('#value').val();
+        let status = $('#status').val();
+
+
+        Swal.fire({
+            title: 'Do you want to save the changes?',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Save',
+            denyButtonText: `Don't save`,
+        }).then((result) => {
+   
+            if (result.isConfirmed) {
+
+                $.post("/Home/InsertData", { category: category, keyname: keyname, value: value, status: status })
+                    .done(function (data) {
+                        if (data == "Saved") {
+                            Swal.fire('Saved!', '', 'success')
+                        }
+                        else {
+                            Swal.fire('Could not Save the data', '', 'error')
+                        }
+                        
+                    }).fail(function (data) {
+                        Swal.fire('Something Went wrong!', '', 'error')
+                    })
+
+            } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    })
+
+
+
+    
+
+
+</script>
